@@ -15,15 +15,33 @@ $con = mysqli_connect($server, $username, $password, $database);
 //     echo "Connection error <br> " . mysqli_connect_error();
 // }
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $title = $_POST['title'];
-    $comm = $_POST['comm'];
-    $sql = "INSERT INTO `crud` (`title`, `comm`) VALUES ('$title', '$comm')";
-    $result = mysqli_query($con, $sql);
-    if($result) {
-        $insert = true;
+    if(isset($_POST['slEdit'])){
+        //  update sql query ========
+        $sl     = $_POST['slEdit'];
+        $title  = $_POST['titleEdit'];
+        $comm   = $_POST['commEdit'];
+        
+        // main sql query ========
+        $sql    = "UPDATE `crud` SET `title` = '$title' , `comm` = '$comm' WHERE `crud`.`sl` = $sl";
+        $result = mysqli_query($con, $sql);
+        if($result){
+            echo "updated record successfylly!";
+        } else echo "error to update the record!";
     } else {
-        echo " not inserted successfully " . mysqli_error($con);
-    }
+        $title  = $_POST['title'];
+        $comm   = $_POST['comm'];
+
+        // sql query ========
+        $sql    = "INSERT INTO `crud` (`title`, `comm`) VALUES ('$title', '$comm')";
+        $result = mysqli_query($con, $sql);
+        
+        // insert new data
+        if($result) {
+            $insert = true;
+        } else {
+            echo " not inserted successfully " . mysqli_error($con);
+        }
+    } 
 }
 ?>
 <!DOCTYPE html>
@@ -35,10 +53,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script>
-        document.getElementsByClassname('edit');
-    </script>
-    
 </head>
 <body>
     <!-- Button trigger modal -->
@@ -55,7 +69,18 @@ Edit Modal
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...
+      <form action="/php/crud/index.php" method="POST">
+        <input type="hidden" id ="slEdit">
+                    <div class="mb-3">
+                        <label  class="form-label">Title</label>
+                        <input type="text" class="form-control" id="titleEdit" name="titleEdit">
+                    </div>
+                    <div class="mb-3">            
+                        <label  class="form-label">Description</label>
+                        <textarea class="form-control" name="commEdit" id="commEdit" cols="30" rows="3"></textarea>
+                    </div>
+                    <button type="submit" name="submit" class="btn btn-primary mb-5">Update data</button>
+                </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -146,14 +171,14 @@ Edit Modal
                         <?php
                         $sql = "SELECT * FROM `crud`";
                         $result = mysqli_query($con, $sql);
-                        $sno = 0;
+                        $sl = 0;
                         while($row = mysqli_fetch_assoc($result)){
-                            $sno += 1;
+                            $sl += 1;
                             echo "<tr>
-                                    <th scope='row'>". $sno . "</th>
+                                    <th scope='row'>". $sl . "</th>
                                     <td>". $row['title'] . "</td>
                                     <td>". $row['comm'] . "</td>
-                                    <td><button class='edit btn btn-sm btn-primary m-1'>Edit</button> <button class='delete btn btn-sm btn-primary m-1'>Delete</button>
+                                    <td><button class='edit btn btn-sm btn-primary m-1' id=".$row['sl'].">Edit</button> <button class='delete btn btn-sm btn-primary m-1'>Delete</button>
                                 </tr>";                            
                         }
                         ?>            
@@ -170,8 +195,26 @@ Edit Modal
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-        let table = new DataTable('#myTable');
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        })
     </script>
-    
+    <script>
+        edits = document.getElementsByClassName('edit');
+        Array.from(edits).forEach((element)=>{
+            element.addEventListener("click", (e)=>{
+                console.log("edit");
+                tr = e.target.parentNode.parentNode;
+                title = tr.getElementsByTagName("td")[0].innerText;
+                comm = tr.getElementsByTagName("td")[1].innerText;
+                console.log(title, comm);
+                titleEdit.value = title;
+                commEdit.value = comm;
+                slEdit.value = e.target.id;
+                console.log(e.target.id); 
+                $('#editModal').modal('toggle');
+            })
+        })
+    </script>
 </body>
 </html>
