@@ -35,10 +35,35 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    
+    <script>
+        document.getElementsByClassname('edit');
+    </script>
     
 </head>
 <body>
+    <!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+Edit Modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Navbar</a>
@@ -114,22 +139,25 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <th scope="col">SL</th>
                             <th scope="col">Title</th>
                             <th scope="col">Comment</th>
-                            <th scope="col">Time</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         $sql = "SELECT * FROM `crud`";
                         $result = mysqli_query($con, $sql);
+                        $sno = 0;
                         while($row = mysqli_fetch_assoc($result)){
+                            $sno += 1;
                             echo "<tr>
-                                    <th scope='row'>". $row['sl'] . "</th>
+                                    <th scope='row'>". $sno . "</th>
                                     <td>". $row['title'] . "</td>
                                     <td>". $row['comm'] . "</td>
-                                    <td>". $row['time'] . "</td>
+                                    <td><button class='edit btn btn-sm btn-primary m-1'>Edit</button> <button class='delete btn btn-sm btn-primary m-1'>Delete</button>
                                 </tr>";                            
                         }
-                        ?>               
+                        ?>            
+                          
                     </tbody>
                 </table>
             </div>
@@ -146,7 +174,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
     
 </body>
-
-
-
 </html>
