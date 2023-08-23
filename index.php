@@ -1,10 +1,12 @@
 <?php
 $insert = false;
+$update = false;
+$delete = false;
 
 $server = "localhost";
 $username = "root";
 $password = "";
-$database = "crud";
+$database = "formdb";
 
 $con = mysqli_connect($server, $username, $password, $database);
 // check connection
@@ -14,6 +16,12 @@ $con = mysqli_connect($server, $username, $password, $database);
 //     echo "<br>";
 //     echo "Connection error <br> " . mysqli_connect_error();
 // }
+if(isset($_GET['delete'])){
+    $sl = $_GET['delete'];
+    $delete = true;
+    $sql = "DELETE FROM `crud` WHERE `sl` = $sl";
+    $result = mysqli_query($con, $sql);
+}
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(isset($_POST['update'])){
         //  update sql query ========
@@ -27,8 +35,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         
         if($result){
-            
-        } else echo "error to update the record!";
+            $update = true;
+        } else {
+            echo "error to update the record!";
+        }
     } 
     else {
         $title  = $_POST['title'];
@@ -72,7 +82,7 @@ Edit Modal
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <form action="/crud/index.php" method="POST">
+      <form action="/php/crud/index.php" method="POST">
         <input type="hidden" name="slEdit" id ="slEdit">
                     <div class="mb-3">
                         <label  class="form-label">Title</label>
@@ -142,9 +152,21 @@ Edit Modal
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>';
                 }
+                if($update) {
+                    echo '<div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>Congratulations!</strong> Your data updated successfully!.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+                }
+                if($delete) {
+                    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Congratulations!</strong> Your data deleted successfully!.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+                }
                 ?>
                 <h2>Add a Task</h2>
-                <form action="/crud/index.php" method="POST">
+                <form action="/php/crud/index.php" method="POST">
                     <div class="mb-3">
                         <label  class="form-label">Title</label>
                         <input type="text" class="form-control" id="title" name="title">
@@ -183,7 +205,10 @@ Edit Modal
                                     <th scope='row'>". $sl . "</th>
                                     <td>". $row['title'] . "</td>
                                     <td>". $row['comm'] . "</td>
-                                    <td><button class='edit btn btn-sm btn-primary m-1' id=".$row['sl'].">Edit</button> <button class='delete btn btn-sm btn-primary m-1'>Delete</button>
+                                    <td>
+                                        <button class='edit btn btn-sm btn-primary m-1' id=".$row['sl'].">Edit</button>
+                                        <button class='delete btn btn-sm btn-primary m-1' id=d".$row['sl'].">Delete</button>
+                                    </td>
                                 </tr>";                            
                         }
                         ?>            
@@ -218,6 +243,21 @@ Edit Modal
                 slEdit.value = e.target.id;
                 console.log(e.target.id); 
                 $('#editModal').modal('toggle');
+            })
+        })
+
+        deletes = document.getElementsByClassName('delete');
+        Array.from(deletes).forEach((element)=>{
+            element.addEventListener("click", (e)=>{
+                console.log("edit ", );
+                sl = e.target.id.substr(1,)
+                
+                if(confirm("Press a button")){
+                    console.log("yes")
+                    window.location = `/php/crud/index.php?delete=${sl}`;
+                } else{
+                    console.log("no")
+                }
             })
         })
     </script>
