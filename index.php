@@ -81,24 +81,24 @@ Edit Modal
         <h5 class="modal-title" id="editModalLabel">Modal title</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
       <form action="/php/crud/index.php" method="POST">
-        <input type="hidden" name="slEdit" id ="slEdit">
-                    <div class="mb-3">
-                        <label  class="form-label">Title</label>
-                        <input type="text" class="form-control" id="titleEdit" name="titleEdit" >
-                    </div>
-                    <div class="mb-3">            
-                        <label  class="form-label">Description</label>
-                        <textarea class="form-control" name="commEdit" id="commEdit" cols="30" rows="3" ></textarea>
-                    </div>
-                    <button type="submit" name="update" class="btn btn-primary mb-5">Update data</button>
-                </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+            <div class="modal-body">
+                <input type="hidden" name="slEdit" id ="slEdit">
+                <div class="mb-3">
+                    <label  class="form-label">Title</label>
+                    <input type="text" class="form-control" id="titleEdit" name="titleEdit" >
+                </div>
+                <div class="mb-3">            
+                    <label  class="form-label">Description</label>
+                    <textarea class="form-control" name="commEdit" id="commEdit" cols="30" rows="3" ></textarea>
+                </div>
+            </div>
+        
+            <div class="modal-footer d-block mr-auto">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" name="update" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>  
     </div>
   </div>
 </div>
@@ -252,9 +252,10 @@ Edit Modal
                 console.log("edit ", );
                 sl = e.target.id.substr(1,)
                 
-                if(confirm("Press a button")){
+                if(confirm("Are you sure to delete this record?")){
                     console.log("yes")
                     window.location = `/php/crud/index.php?delete=${sl}`;
+                    // post request to submit form ====
                 } else{
                     console.log("no")
                 }
