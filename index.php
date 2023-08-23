@@ -1,61 +1,7 @@
 <?php
-$insert = false;
-$update = false;
-$delete = false;
+require("dbcon.php");
+require("crud.php");
 
-$server = "localhost";
-$username = "root";
-$password = "";
-$database = "formdb";
-
-$con = mysqli_connect($server, $username, $password, $database);
-// check connection
-// if($con) {
-//     echo "Connection ok2 <br><br>";
-// } else {
-//     echo "<br>";
-//     echo "Connection error <br> " . mysqli_connect_error();
-// }
-if(isset($_GET['delete'])){
-    $sl = $_GET['delete'];
-    $delete = true;
-    $sql = "DELETE FROM `crud` WHERE `sl` = $sl";
-    $result = mysqli_query($con, $sql);
-}
-if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if(isset($_POST['update'])){
-        //  update sql query ========
-        $sl     = $_POST['slEdit'];
-        $title  = $_POST['titleEdit'];
-        $comm   = $_POST['commEdit'];
-        
-        // main sql query ========
-        $sql    = "UPDATE `crud` SET `title` = '$title' , `comm` = '$comm' WHERE `crud`.`sl` = $sl";
-        $result = mysqli_query($con, $sql);
-
-        
-        if($result){
-            $update = true;
-        } else {
-            echo "error to update the record!";
-        }
-    } 
-    else {
-        $title  = $_POST['title'];
-        $comm   = $_POST['comm'];
-
-        // sql query ========
-        $sql    = "INSERT INTO `crud` (`title`, `comm`) VALUES ('$title', '$comm')";
-        $result = mysqli_query($con, $sql);
-        
-        // insert new data
-        if($result) {
-            $insert = true;
-        } else {
-            echo " not inserted successfully " . mysqli_error($con);
-        }
-    } 
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,44 +12,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <!-- Button trigger modal -->
 <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
 Edit Modal
 </button> -->
-
-<!-- Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="/php/crud/index.php" method="POST">
-            <div class="modal-body">
-                <input type="hidden" name="slEdit" id ="slEdit">
-                <div class="mb-3">
-                    <label  class="form-label">Title</label>
-                    <input type="text" class="form-control" id="titleEdit" name="titleEdit" >
-                </div>
-                <div class="mb-3">            
-                    <label  class="form-label">Description</label>
-                    <textarea class="form-control" name="commEdit" id="commEdit" cols="30" rows="3" ></textarea>
-                </div>
-            </div>
-        
-            <div class="modal-footer d-block mr-auto">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" name="update" class="btn btn-primary">Save changes</button>
-            </div>
-        </form>  
-    </div>
-  </div>
-</div>
-
-
+<!-- ========= nav bar =========== -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand mx-5" href="#"><img height="50px" src="proxy_form.png" alt="proxy_form.png"></a>
@@ -136,8 +52,37 @@ Edit Modal
         </div>
     </div>
     </nav>
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/php/crud/index.php" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="slEdit" id ="slEdit">
+                        <div class="mb-3">
+                            <label  class="form-label">Title</label>
+                            <input type="text" class="form-control" id="titleEdit" name="titleEdit" >
+                        </div>
+                        <div class="mb-3">            
+                            <label  class="form-label">Description</label>
+                            <textarea class="form-control" name="commEdit" id="commEdit" cols="30" rows="3" ></textarea>
+                        </div>
+                    </div>
+                
+                    <div class="modal-footer d-block mr-auto">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="update" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>  
+            </div>
+        </div>
+    </div>
     
-    <div class="container pb-0 mb-0">
+    <div class="container pb-0 mt-3">
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-8">
@@ -161,9 +106,9 @@ Edit Modal
                   </div>';
                 }
                 ?>
-                <h2>Add a Task</h2>
                 <form action="/php/crud/index.php" method="POST">
                     <div class="mb-3">
+                        <h2>Add a Task</h2>
                         <label  class="form-label">Title</label>
                         <input type="text" class="form-control" id="title" name="title">
                     </div>
@@ -214,48 +159,10 @@ Edit Modal
             <div class="col-md-2"></div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.0.js"
-  integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        })
-    </script>
-    <script>
-        edits = document.getElementsByClassName('edit');
-        Array.from(edits).forEach((element)=>{
-            element.addEventListener("click", (e)=>{
-                console.log("edit");
-                tr = e.target.parentNode.parentNode;
-                title = tr.getElementsByTagName("td")[0].innerText;
-                comm = tr.getElementsByTagName("td")[1].innerText;
-                console.log(title, comm);
-                titleEdit.value = title;
-                commEdit.value = comm;
-                slEdit.value = e.target.id;
-                console.log(e.target.id); 
-                $('#editModal').modal('toggle');
-            })
-        })
-
-        deletes = document.getElementsByClassName('delete');
-        Array.from(deletes).forEach((element)=>{
-            element.addEventListener("click", (e)=>{
-                console.log("edit ", );
-                sl = e.target.id.substr(1,)
-                
-                if(confirm("Are you sure to delete this record?")){
-                    console.log("yes")
-                    window.location = `/php/crud/index.php?delete=${sl}`;
-                    // post request to submit form ====
-                } else{
-                    console.log("no")
-                }
-            })
-        })
-    </script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"
+integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 </body>
 </html>
