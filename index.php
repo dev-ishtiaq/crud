@@ -191,7 +191,7 @@ Edit Modal
                             <th scope="col">SL</th>
                             <th scope="col">Title</th>
                             <th scope="col">Comment</th>
-                            <th scope="col">Actions</th>
+                            <th class="text-center" scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -205,9 +205,9 @@ Edit Modal
                                     <th scope='row'>". $sl . "</th>
                                     <td>". $row['title'] . "</td>
                                     <td>". $row['comm'] . "</td>
-                                    <td>
-                                        <button class='edit btn btn-sm btn-primary m-1' id=".$row['sl'].">Edit</button>
-                                        <button class='delete btn btn-sm btn-primary m-1' id=d".$row['sl'].">Delete</button>
+                                    <td class='text-center'>
+                                        <button class='edit btn btn-sm btn-primary m-1 px-3' id=".$row['sl'].">Edit</button>
+                                        <button class='delete btn btn-sm btn-danger m-1' id=d".$row['sl'].">Delete</button>
                                     </td>
                                 </tr>";                            
                         }
