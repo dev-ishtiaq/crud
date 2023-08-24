@@ -4,9 +4,18 @@ $update = false;
 $delete = false;
 if(isset($_GET['delete'])){
     $sl = $_GET['delete'];
-    $delete = true;
+   
     $sql = "DELETE FROM `crud` WHERE `sl` = $sl";
     $result = mysqli_query($con, $sql);
+    if($result){
+        $delete = true;
+        header("Location:index.php");
+        exit();
+    }else {
+        echo "error to delete the record!";
+    }
+
+
 }
 
 //  update sql query ========

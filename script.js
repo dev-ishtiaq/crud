@@ -27,7 +27,7 @@
                 
                 if(confirm("Are you sure to delete this record?")){
                     console.log("yes")
-                    window.location = `/php/crud/index.php?delete=${sl}`;
+                    window.location = `/crud/index.php?delete=${sl}`;
                     // post request to submit form ====
                 } else{
                     console.log("no")

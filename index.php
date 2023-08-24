@@ -60,7 +60,7 @@ Edit Modal
                 <h5 class="modal-title" id="editModalLabel">Modal title</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/php/crud/index.php" method="POST">
+            <form action="/crud/index.php" method="POST">
                     <div class="modal-body">
                         <input type="hidden" name="slEdit" id ="slEdit">
                         <div class="mb-3">
@@ -106,7 +106,7 @@ Edit Modal
                   </div>';
                 }
                 ?>
-                <form action="/php/crud/index.php" method="POST">
+                <form action="/crud/index.php" method="POST">
                     <div class="mb-3">
                         <h2>Add a Task</h2>
                         <label  class="form-label">Title</label>
